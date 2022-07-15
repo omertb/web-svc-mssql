@@ -1,0 +1,29 @@
+version: "3.7"
+services:
+  sqlexp:
+    restart: always
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=ch4n63m3.
+      - MSSQL_PID=Express
+    ports:
+      - 1433:1433
+    volumes:
+      - mssqldir:/var/opt/mssql
+    image:  mcr.microsoft.com/mssql/server:2019-latest
+
+  flask-server:
+    restart: always
+    build: .
+    volumes:
+      - ./flaskapp:/flaskapp
+    environment:
+      - FSECRETKEY=ch4n63m3
+      - MSCRED=sa:ch4n63m3.
+    links:
+      - sqlexp
+    ports:
+      - 5000:5000
+
+volumes:
+  mssqldir:
